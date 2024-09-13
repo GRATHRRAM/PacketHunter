@@ -38,8 +38,8 @@ class Devices {
     void ConnectDevice(dvDevice *FirstDevice, dvDevice *SecondDevice);
     void DisconnectDevice(dvDevice *FirstDevice, dvDevice *SecondDevice);
 
-    void AddDevie(unsigned char Type, Vector2 Position, std::string Name, std::string IP);
-    void RemoveDevide(unsigned long ID);
+    void AddDevice(unsigned char Type, Vector2 Position, std::string Name, std::string IP);
+    void RemoveDevice(unsigned long ID);
 
     void DrawCables();
     void DrawDevices();
