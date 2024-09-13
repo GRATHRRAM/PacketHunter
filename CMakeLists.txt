@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.10)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+project(PacketHunter VERSION 1.0)
+
+set(sources
+    ./src/PacketHunter.cpp
+    ./src/Devices/Devices.cpp
+)
+
+
+add_compile_options(-Wall -Wextra -O2)
+add_executable(ph ./src/main.cpp ${sources})
+
+target_link_libraries(ph PRIVATE m raylib)

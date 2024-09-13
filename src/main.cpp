@@ -1,6 +1,6 @@
 #include "PacketHunter.hpp"
 
 int main() {
-    PacketHunter ph();
+    PacketHunter ph;
     ph.Run();
 }
