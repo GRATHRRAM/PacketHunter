@@ -1,13 +1,16 @@
 #pragma once
 #include "Devices/Devices.hpp"
-
-enum class PacketHunterEnum {
-    Renderer_Raylib
-};
+#include <raylib.h>
 
 class PacketHunter {
+    private:
+        Camera2D _Camera;
+        Devices *devs;
+
+        void Draw();
+
     public:
-        PacketHunter(const unsigned char Renderer);
+        PacketHunter();
         ~PacketHunter();
         void Run();
 };
