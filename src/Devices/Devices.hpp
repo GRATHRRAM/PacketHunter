@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <vector>
 #include <string>
+#define UINT32MAX 4294967295;
 
 typedef struct dvLine {
     unsigned long FirstObjID;
@@ -31,6 +32,7 @@ class Devices {
     std::vector<dvLine>   _Cables;
     std::vector<dvDevice> _Devices;
     
+    unsigned long FindDevice(unsigned long ID);
     public:
 
     void ConnectDevice(dvDevice *FirstDevice, dvDevice *SecondDevice);
