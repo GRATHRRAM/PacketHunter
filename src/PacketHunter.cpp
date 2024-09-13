@@ -2,13 +2,13 @@
 #include <cstdio>
 #include <cstdlib>
 
-PacketHunter::PacketHunter(const unsigned char GraphicsLib) {
-    grf = new Graphics(GraphicsLib);
-    grf->Init();
+PacketHunter::PacketHunter(const unsigned char _Renderer) {
+    rnd = new Renderer(_Renderer);
+    rnd->Init();
 }
 
 PacketHunter::~PacketHunter() {
-    grf->Deinit();
+    rnd->Deinit();
 }
 
 void PacketHunter::Run() {

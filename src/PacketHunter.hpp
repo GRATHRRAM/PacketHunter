@@ -1,17 +1,15 @@
 #pragma once
-#include "Graphics/Graphics.hpp"
+#include "Renderer/Renderer.hpp"
 
 enum class PacketHunterEnum {
-    Graphics_Raylib
+    Renderer_Raylib
 };
 
 class PacketHunter {
     private:
-        Graphics *grf;
-
-        unsigned char InitRaylib();
+        Renderer *rnd;
     public:
-        PacketHunter(const unsigned char GraphicsLib);
+        PacketHunter(const unsigned char Renderer);
         ~PacketHunter();
         void Run();
 };
