@@ -1,14 +1,14 @@
 #include "PacketHunter.hpp"
 #include <cstdio>
 #include <cstdlib>
+#include <raylib.h>
 
 PacketHunter::PacketHunter(const unsigned char _Renderer) {
-    rnd = new Renderer(_Renderer);
-    rnd->Init();
+    InitWindow(1024, 576, "PacketHunter");
 }
 
 PacketHunter::~PacketHunter() {
-    rnd->Deinit();
+    CloseWindow();
 }
 
 void PacketHunter::Run() {
