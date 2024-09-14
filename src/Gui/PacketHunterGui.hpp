@@ -17,6 +17,8 @@ class PacketHunterGui {
         std::vector<guiElement> GuiElements;
 
         Devices *Devs;
+
+        void Place();
     public:
         PacketHunterGui(Devices *Devs, float Scale);
 
