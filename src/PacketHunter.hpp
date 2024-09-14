@@ -16,6 +16,8 @@ class PacketHunter {
 
         void Draw();
         void Event();
+        void UpdateCamera();
+        void Place(unsigned char Type);
 
     public:
         PacketHunter();

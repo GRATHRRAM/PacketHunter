@@ -1,15 +1,7 @@
 #include "PacketHunterGui.hpp"
 #include <raylib.h>
 
-PacketHunterGui::PacketHunterGui(Devices *_Devs, float _Scale) {
-    Devs = _Devs;
-    Scale = _Scale;
-}
-
-void PacketHunterGui::Place() {
-
-}
-
+PacketHunterGui::PacketHunterGui(float _Scale) {Scale = _Scale;}
 
 void PacketHunterGui::Draw() {
     float x = 0;
@@ -40,4 +32,8 @@ void PacketHunterGui::EraseElement(std::string name) {
     for(unsigned int i=0; i < GuiElements.size(); ++i) {
         if(GuiElements[i].Name == name) GuiElements.erase(GuiElements.begin() + i);
     }
+}
+
+unsigned char PacketHunterGui::GetType() {
+    return Type;
 }

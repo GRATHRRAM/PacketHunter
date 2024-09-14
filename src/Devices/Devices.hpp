@@ -32,9 +32,11 @@ class Devices {
     private:
     std::vector<dvLine>   _Cables;
     std::vector<dvDevice> _Devices;
+    float Scale;
     
     unsigned long FindDevice(unsigned long ID);
     public:
+    Devices(float Scale);
 
     void ConnectDevice(dvDevice *FirstDevice, dvDevice *SecondDevice);
     void DisconnectDevice(dvDevice *FirstDevice, dvDevice *SecondDevice);
@@ -44,5 +46,4 @@ class Devices {
 
     void DrawCables();
     void DrawDevices();
-
 };

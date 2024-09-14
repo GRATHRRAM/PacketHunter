@@ -16,15 +16,14 @@ class PacketHunterGui {
         float Scale;
         std::vector<guiElement> GuiElements;
 
-        Devices *Devs;
-
-        void Place();
     public:
-        PacketHunterGui(Devices *Devs, float Scale);
+        PacketHunterGui(float Scale);
 
         void Draw();
         void Update();
 
         void PushElement(guiElement *Element);
         void EraseElement(std::string Name);
+
+        unsigned char GetType();
 };
