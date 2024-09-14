@@ -60,6 +60,29 @@ void PacketHunter::Place(unsigned char Type) {
     }
 }
 
+void PacketHunter::Remove() {
+    Vector2 m = GetMousePosition();
+    m.x -= _Camera.offset.x;
+    m.y -= _Camera.offset.y;
+    //TODO implement own checkcolloisonRects (cos its not update every frame it dosent realy matters)
+    for(unsigned int i=0; i < devs->_Devices.size(); ++i) {
+        if(CheckCollisionRecs(
+            (Rectangle){
+            devs->_Devices[i].Position.x,
+            devs->_Devices[i].Position.y,
+            devs->GetScale(),
+            devs->GetScale()},
+            (Rectangle){
+            m.x,
+            m.y,
+            1,
+            1}
+        )) {
+            devs->_Devices.erase(devs->_Devices.begin() + i);
+        }
+    }
+}
+
 void PacketHunter::Draw() {
     BeginDrawing();
     ClearBackground(LIGHTGRAY);
@@ -80,6 +103,7 @@ void PacketHunter::Draw() {
 void PacketHunter::Event() {
     MoveCamera();
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) Place(gui->GetType());
+    if(IsKeyPressed(KEY_R)) Remove();
 }
 
 void PacketHunter::UpdateCamera() {    

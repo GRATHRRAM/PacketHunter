@@ -41,7 +41,7 @@ void Devices::DisconnectDevice(dvDevice *fdev, dvDevice *sdev) {
 void Devices::AddDevice(unsigned char Type, Vector2 Position, std::string Name, std::string IP) {
     dvDevice dev;
     dev.ID   = rand() % UINT32MAX;
-    dev.MAC  = rand() % 281474976710656;
+    dev.MAC  = rand() % UINT48MAX;//cos mac is 48 bit so it shoud be realistic ig?
     dev.Type = Type;
     dev.IP   = IP;
     dev.Name = Name;

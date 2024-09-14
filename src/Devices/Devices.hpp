@@ -2,7 +2,9 @@
 #include <raylib.h>
 #include <vector>
 #include <string>
+
 #define UINT32MAX 4294967295;
+#define UINT48MAX 281474976710656;
 
 typedef struct dvLine {
     unsigned long FirstObjID;
@@ -30,12 +32,12 @@ enum class dvTypes {
 
 class Devices {
     private:
-    std::vector<dvLine>   _Cables;
-    std::vector<dvDevice> _Devices;
     float Scale;
     
     unsigned long FindDevice(unsigned long ID);
     public:
+    std::vector<dvLine>   _Cables;
+    std::vector<dvDevice> _Devices;
     Devices(float Scale);
 
     void ConnectDevice(dvDevice *FirstDevice, dvDevice *SecondDevice);
@@ -46,4 +48,6 @@ class Devices {
 
     void DrawCables();
     void DrawDevices();
+
+    float GetScale() {return Scale;}
 };
