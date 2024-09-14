@@ -1,13 +1,16 @@
 #pragma once
 #include "Devices/Devices.hpp"
+#include "Gui/PacketHunterGui.hpp"
 #include <raylib.h>
 
 class PacketHunter {
     private:
         Camera2D _Camera;
         Vector2 CameraTarget;
-        Devices *devs;
         float DeltaTime;
+
+        Devices *devs;
+        PacketHunterGui *gui;
 
         void MoveCamera();
 

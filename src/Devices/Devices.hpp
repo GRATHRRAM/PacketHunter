@@ -22,6 +22,7 @@ typedef struct dvDevice {
 } phDevice;
 
 enum class dvTypes {
+    cable,
     buffer,
     computer,
     hub

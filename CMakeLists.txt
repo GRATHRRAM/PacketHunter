@@ -6,6 +6,7 @@ project(PacketHunter VERSION 1.0)
 
 set(sources
     ./src/PacketHunter.cpp
+    ./src/Gui/PacketHunterGui.cpp
     ./src/Devices/Devices.cpp
 )
 

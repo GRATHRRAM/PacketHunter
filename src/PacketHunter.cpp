@@ -7,7 +7,23 @@
 
 PacketHunter::PacketHunter() {
     devs = new Devices();
+    gui = new PacketHunterGui(devs, 10.f);
 
+    guiElement Cable;
+    Cable.Name = "Cable";
+    Cable.Key  = KEY_ONE;
+    Cable.Type = (unsigned char) dvTypes::cable;
+    Cable._Color = BLUE;
+
+    guiElement Buffer;
+    Buffer.Name = "Buffer";
+    Buffer.Key  = KEY_TWO;
+    Buffer.Type = (unsigned char) dvTypes::buffer;
+    Buffer._Color = RED;
+
+    gui->PushElement(&Cable);
+    gui->PushElement(&Buffer);
+   
     _Camera.zoom = 1.f;
     _Camera.target = {0, 0};
     _Camera.rotation = 0;
@@ -25,6 +41,7 @@ PacketHunter::PacketHunter() {
 PacketHunter::~PacketHunter() {
     CloseWindow();
     delete devs;
+    delete gui;
 }
 
 void PacketHunter::MoveCamera() {
@@ -48,7 +65,9 @@ void PacketHunter::Draw() {
     devs->DrawDevices();
     
     EndMode2D();
-    DrawFPS(10,10);
+    
+    gui->Draw();
+
     EndDrawing();
 }
 
@@ -60,6 +79,7 @@ void PacketHunter::Run() {
     while(!WindowShouldClose()) {
         DeltaTime = GetFrameTime();
         Event();
+        gui->Update();
         Draw();
     }
 }
