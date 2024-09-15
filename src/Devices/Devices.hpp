@@ -23,7 +23,7 @@ typedef struct dvDevice {
     std::string MAC;
 } phDevice;
 
-enum class dvTypes {
+enum class dvTypes : unsigned char {
     cable,
     buffer,
     computer,
