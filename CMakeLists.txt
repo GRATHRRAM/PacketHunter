@@ -11,11 +11,11 @@ set(sources
     ./src/Devices/Devices.cpp
 )
 
-#if(${static} STREQUAL "true")
-#    add_compile_options(-static -Wall -Wextra -O2)
-#else()
+if(static STREQUAL "true")
+    add_compile_options(-static -Wall -Wextra -O2)
+else()
     add_compile_options(-Wall -Wextra -O2)
-#endif()
+endif()
 
 add_executable(ph ./src/main.cpp ${sources})
 
