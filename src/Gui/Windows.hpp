@@ -33,7 +33,6 @@ namespace WindowLayout {
         WindowText Text;
         bool Focus;
         bool Outline;
-        Color TextColor;
         Color UnFocusedBackground;
         Color FocusedBackground;
     } WindowInput;

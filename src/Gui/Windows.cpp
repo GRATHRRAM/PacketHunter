@@ -16,8 +16,8 @@ WindowLayout::WindowButton WindowLayout::ExempleButton = {
     WindowLayout::ExempleText,
     false,
     true,
-    LIGHTGRAY,
     DARKGRAY,
+    LIGHTGRAY,
 };
 
 WindowLayout::WindowInput WindowLayout::ExempleInput = {
@@ -25,9 +25,8 @@ WindowLayout::WindowInput WindowLayout::ExempleInput = {
     WindowLayout::ExempleText,
     false,
     true,
-    BLACK,
     DARKGRAY,
-    (Color){190, 190, 190, 255}
+    LIGHTGRAY,
 };
 
 Window::Window(std::string _Title, Rectangle *Window) {
@@ -43,27 +42,67 @@ void Window::UpdateWindow() {
 
     if(!IsMouseButtonDown(MOUSE_BUTTON_LEFT)) Drag = false;
     
-    if (CheckCollisionRecs((Rectangle){m.x, m.y,1,1},_Window)) {
+    if (CheckCollisionPointRec(m,_Window)) {
         //Window
-        if(CheckCollisionRecs((Rectangle){m.x,m.y,1,1}, (Rectangle){_Window.x, _Window.y, _Window.width, 10})) {
+        if(CheckCollisionPointRec(m, (Rectangle){_Window.x, _Window.y, _Window.width, 10})) {
             //TopBar
             if(IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !Drag) {
                 Drag = true;
                 Dist.x = m.x - _Window.x;
                 Dist.y = m.y - _Window.y;
-            }
-            /*
-            for(unsigned int i=0; i < Elements.size(); ++i) {
-                //buttons
-                for(unsigned int ii=0; i < Elements[i].Buttons.size(); ++ii) {
-                    Vector2 GlobalPosition = {
-                        _Window.x + Elements[i].Element.x + Elements[i].Buttons[ii].Button.x, 
-                        _Window.y + Elements[i].Element.y + Elements[i].Buttons[ii].Button.y 
-                    };
-                    
-                }
-            }*/
+            }   
         } 
+
+        //Elements
+        for(unsigned int i=0; i < Elements.size(); ++i) {
+            //Buttons
+            for(unsigned int ii=0; ii < Elements[i].Buttons.size(); ++ii) {
+                Vector2 GlobalPosition = {
+                    _Window.x + Elements[i].Element.x + Elements[i].Buttons[ii].Button.x, 
+                    _Window.y + Elements[i].Element.y + Elements[i].Buttons[ii].Button.y 
+                };
+
+                if(CheckCollisionPointRec(m,
+                    (Rectangle) {
+                    GlobalPosition.x,
+                    GlobalPosition.y,
+                    Elements[i].Buttons[ii].Button.width,
+                    Elements[i].Buttons[ii].Button.height}) &&
+                    IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+                    
+                    Elements[i].Buttons[ii].Pressed = true;
+                } else Elements[i].Buttons[ii].Pressed = false;
+            }
+            //Inputs
+
+            for(unsigned int ii=0; ii < Elements[i].Inputs.size(); ++ii) {
+                Vector2 GlobalPosition = {
+                    _Window.x + Elements[i].Element.x + Elements[i].Inputs[ii].InputRect.x, 
+                    _Window.y + Elements[i].Element.y + Elements[i].Inputs[ii].InputRect.y 
+                };
+
+                if(CheckCollisionPointRec(m,
+                    (Rectangle) {
+                    GlobalPosition.x,
+                    GlobalPosition.y,
+                    Elements[i].Inputs[ii].InputRect.width,
+                    Elements[i].Inputs[ii].InputRect.height}) &&
+                    IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+                    
+                    Elements[i].Inputs[ii].Focus = true;
+                } 
+                
+                if(IsKeyPressed(KEY_ENTER)) Elements[i].Inputs[ii].Focus = false;
+                
+                if(Elements[i].Inputs[ii].Focus) {
+                    if(!IsCursorHidden()) DisableCursor();
+                    if(IsKeyPressed(KEY_BACKSPACE)) Elements[i].Inputs[ii].Text.Text.pop_back();
+                    else Elements[i].Inputs[ii].Text.Text += GetCharPressed();
+                } else if(IsCursorHidden()) {
+                    EnableCursor();
+                }
+            }
+        }
     }
 
     if(Drag) {_Window.x = m.x - Dist.x; _Window.y = m.y - Dist.y;}
@@ -72,6 +111,8 @@ void Window::UpdateWindow() {
 void Window::Draw() {
     //Main Window
     DrawRectangleRec(_Window, Background);
+    DrawText(Title.c_str(),_Window.x + 5, _Window.y + 2 , 2, BLACK);
+
 
     //Elements
     for(unsigned int i=0; i < Elements.size(); ++i) {
@@ -151,6 +192,7 @@ void Window::Draw() {
                     Elements[i].Inputs[ii].UnFocusedBackground
                 );           
             }
+            //TODO TEXTBOX
             DrawText(
                 Elements[i].Inputs[ii].Text.Text.c_str(),
                 Elements[i].Inputs[ii].Text.Position.x + LocalInputPos.x,
@@ -162,6 +204,8 @@ void Window::Draw() {
 
         //TopBar
         DrawRectangle(_Window.x,_Window.y,_Window.width,10,TopBar);
+        //Window Title
+        DrawText(Title.c_str(),_Window.x + 5, _Window.y, 2, BLACK);
     }
 }
 

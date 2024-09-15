@@ -79,19 +79,13 @@ void PacketHunter::Place(unsigned char Type) {
 
 void PacketHunter::Remove() {
     Vector2 m = PacketHunter::CalculateCursorPosition();
-    //TODO implement own checkcolloisonRects (cos its not update every frame it dosent realy matters)
     for(unsigned int i=0; i < devs->_Devices.size(); ++i) {
-        if(CheckCollisionRecs(
+        if(CheckCollisionPointRec(m,
             (Rectangle){
             devs->_Devices[i].Position.x,
             devs->_Devices[i].Position.y,
             devs->GetScale(),
-            devs->GetScale()},
-            (Rectangle){
-            m.x,
-            m.y,
-            1,
-            1}
+            devs->GetScale()}
         )) {
             devs->_Devices.erase(devs->_Devices.begin() + i);
         }

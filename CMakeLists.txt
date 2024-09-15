@@ -22,7 +22,21 @@ else()
     add_compile_options(-O2)
 endif()
 
+
+if(build_windows STREQUAL "true" AND NOT WIN32)
+     set(CMAKE_CXX_COMPILER x86_64-w64-mingw32-g++)
+     include_directories(./include)
+     link_directories(./lib)
+     add_compile_options(-L./lib -I./include)
+else()
+     set(CMAKE_CXX_COMPILER g++)
+endif()
+
 add_compile_options(-Wall -Wextra)
 add_executable(ph ./src/main.cpp ${sources})
 
-target_link_libraries(ph PRIVATE m raylib)
+if(all_libs STREQUAL "true")
+    target_link_libraries(ph PRIVATE m raylib opengl32 gdi32 winmm gcc stdc++ winpthread)
+else()
+    target_link_libraries(ph PRIVATE m raylib)
+endif()
