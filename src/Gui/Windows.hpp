@@ -34,7 +34,8 @@ namespace WindowLayout {
         bool Focus;
         bool Outline;
         Color TextColor;
-        Color BackGround;
+        Color UnFocusedBackground;
+        Color FocusedBackground;
     } WindowInput;
 
     typedef struct WindowElement {
