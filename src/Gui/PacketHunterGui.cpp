@@ -37,3 +37,8 @@ void PacketHunterGui::EraseElement(std::string name) {
 unsigned char PacketHunterGui::GetType() {
     return Type;
 }
+
+float PacketHunterGui::GetGuiYUpBorder(bool Focused) {
+    if(Focused) return 7 * Scale;
+    else return 5 * Scale;
+}

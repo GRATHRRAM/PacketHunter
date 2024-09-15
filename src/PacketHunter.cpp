@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <raylib.h>
 #include <string>
+#include "Gui/Windows.hpp"
 #include "raymath.h"
 
 PacketHunter::PacketHunter() {
@@ -32,12 +33,30 @@ PacketHunter::PacketHunter() {
     
     InitWindow(1024, 576, "PacketHunter");
     SetTargetFPS(60);
+
+    winman = new WindowManager(gui->GetGuiYUpBorder(true), &_Camera, this);
+    
+    Rectangle rect = {0,0, 320, 240};
+    Window win("Cool Window", &rect);
+
+    WindowLayout::WindowElement el;
+    el.Element = rect;
+    el.Outline = true;
+    el.Background = (Color) { 170, 170, 170, 255 };
+    el.Texts.push_back(WindowLayout::ExempleText);
+    el.Buttons.push_back(WindowLayout::ExempleButton);
+    el.Inputs.push_back(WindowLayout::ExempleInput);
+
+    win.Elements.push_back(el);
+
+    winman->PushWindow(&win);
 }
 
 PacketHunter::~PacketHunter() {
     CloseWindow();
     delete devs;
     delete gui;
+    delete winman;
 }
 
 void PacketHunter::MoveCamera() {
@@ -52,18 +71,14 @@ void PacketHunter::Place(unsigned char Type) {
         //TODO Window api
     }
     if(Type == (unsigned char) dvTypes::buffer) {
-        Vector2 m = GetMousePosition();
-        m.x += CameraTarget.x - _Camera.offset.x;
-        m.y += CameraTarget.y - _Camera.offset.y;
+        Vector2 m = CalculateCursorPosition();
 
         devs->AddDevice(Type, m, "buffer" + std::to_string(rand()), "192.168.0." + std::to_string(rand() % 255));
     }
 }
 
 void PacketHunter::Remove() {
-    Vector2 m = GetMousePosition();
-    m.x -= _Camera.offset.x;
-    m.y -= _Camera.offset.y;
+    Vector2 m = PacketHunter::CalculateCursorPosition();
     //TODO implement own checkcolloisonRects (cos its not update every frame it dosent realy matters)
     for(unsigned int i=0; i < devs->_Devices.size(); ++i) {
         if(CheckCollisionRecs(
@@ -94,7 +109,8 @@ void PacketHunter::Draw() {
     devs->DrawDevices();
     
     EndMode2D();
-    
+   
+    winman->DrawWindows();
     gui->Draw();
 
     EndDrawing();
@@ -102,8 +118,10 @@ void PacketHunter::Draw() {
 
 void PacketHunter::Event() {
     MoveCamera();
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) Place(gui->GetType());
-    if(IsKeyPressed(KEY_R)) Remove();
+    if(!winman->CheckWindowsColision()) { 
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) Place(gui->GetType());
+        if(IsKeyPressed(KEY_R)) Remove();
+    } else winman->UpdateWindows();
 }
 
 void PacketHunter::UpdateCamera() {    
@@ -124,4 +142,11 @@ void PacketHunter::Run() {
         gui->Update();
         Draw();
     }
+}
+
+Vector2 PacketHunter::CalculateCursorPosition() {
+    Vector2 m = GetMousePosition();
+    m.x += CameraTarget.x - _Camera.offset.x;
+    m.y += CameraTarget.y - _Camera.offset.y;
+    return m;
 }

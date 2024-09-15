@@ -1,7 +1,7 @@
 #pragma once
-#include "../Devices/Devices.hpp"
 #include <string>
 #include <vector>
+#include "raylib.h"
 
 typedef struct guiElement {
     std::string Name;
@@ -26,4 +26,5 @@ class PacketHunterGui {
         void EraseElement(std::string Name);
 
         unsigned char GetType();
+        float GetGuiYUpBorder(bool Focused);
 };

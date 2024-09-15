@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include <string>
 #include <vector>
+#include "../PacketHunter.hpp"
 
 namespace WindowLayout {
     /*Struct Layout*/
@@ -16,7 +17,7 @@ namespace WindowLayout {
         Vector2 Position;
         std::string Text;
         unsigned char FontSize;
-        Color Color;
+        Color TextColor;
     } WindowText;
     
     typedef struct WindowButton {
@@ -53,6 +54,8 @@ namespace WindowLayout {
 }
 
 class Window {
+    private:
+        Camera2D *_Camera;
     public:
     Rectangle _Window;
     std::string Title;
@@ -62,16 +65,23 @@ class Window {
 
     std::vector<WindowLayout::WindowElement> Elements;
     
-    Window(Rectangle *Window, std::string Title);
+    Window(std::string Title, Rectangle *Window);
     void UpdateWindow();
     void Draw();
+    void SetCamera(Camera2D *Camera);
 };
 
 class WindowManager {
+    private:
+        Camera2D *_Camera;
+        PacketHunter *ph;
     public:
+    float WindowsYBorderUP;
+    WindowManager(float WindowsYBordedUP, Camera2D *Camera, PacketHunter *ph);
+
     std::vector<Window> Windows;
-    void PushWindow();
-    void RemoveWindow();
+    bool CheckWindowsColision();
+    void PushWindow(Window *Window);
     void UpdateWindows();
     void DrawWindows();
 };

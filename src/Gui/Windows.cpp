@@ -1,17 +1,18 @@
 #include "Windows.hpp"
+#include <cstdio>
 #include <raylib.h>
 #include <string>
 
 
 WindowLayout::WindowText WindowLayout::ExempleText = {
-    (Vector2){0,0},
+    (Vector2){10,10},
     "Text",
     2,
     BLACK
 };
 
 WindowLayout::WindowButton WindowLayout::ExempleButton = {
-    (Rectangle){0,20,100,100},
+    (Rectangle){20,20,100,100},
     WindowLayout::ExempleText,
     false,
     true,
@@ -20,16 +21,16 @@ WindowLayout::WindowButton WindowLayout::ExempleButton = {
 };
 
 WindowLayout::WindowInput WindowLayout::ExempleInput = {
-    (Rectangle){0, 140, 100, 100},
+    (Rectangle){20, 140, 100, 100},
     WindowLayout::ExempleText,
     false,
     true,
     BLACK,
     DARKGRAY,
-    LIGHTGRAY
+    (Color){190, 190, 190, 255}
 };
 
-Window::Window(Rectangle *Window, std::string _Title) {
+Window::Window(std::string _Title, Rectangle *Window) {
     _Window=*Window;
     Title=_Title;
     TopBar = GRAY;
@@ -38,77 +39,115 @@ Window::Window(Rectangle *Window, std::string _Title) {
 }
 
 void Window::UpdateWindow() {
+    Vector2 m = GetMousePosition();
+    m.x -= _Camera->offset.x;
+    m.y -= _Camera->offset.y;
 
+    if (CheckCollisionRecs((Rectangle){m.x, m.y,1,1},_Window)) {
+        //Window
+        if(CheckCollisionRecs((Rectangle){m.x,m.y,1,1}, (Rectangle){_Window.x, _Window.y, _Window.width, 10})) {
+            //TopBar
+            if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {_Window.x = m.x; _Window.y = m.y;}
+        }
+    } 
 }
 
 void Window::Draw() {
     //Main Window
     DrawRectangleRec(_Window, Background);
-    DrawRectangle(_Window.x,_Window.y,_Window.width,10,TopBar);
 
     //Elements
     for(unsigned int i=0; i < Elements.size(); ++i) {
         //Element
-        if(Elements[i].Outline) DrawRectangleLinesEx(Elements[i].Element, 5, BLACK);
+        Rectangle LocalElementPos = {
+            _Window.x + Elements[i].Element.x,
+            _Window.y + Elements[i].Element.y,
+            Elements[i].Element.width,
+            Elements[i].Element.height
+        };
+
+        if(Elements[i].Outline) DrawRectangleLinesEx(LocalElementPos, 2, BLACK);
+        DrawRectangleRec(LocalElementPos, Elements[i].Background);
         
         //Text
         for(unsigned int ii=0; ii < Elements[i].Texts.size(); ++ii) {
             DrawText(
                 Elements[i].Texts[ii].Text.c_str(),
-                Elements[i].Texts[ii].Position.x,
-                Elements[i].Texts[ii].Position.y,
+                Elements[i].Texts[ii].Position.x + LocalElementPos.x,
+                Elements[i].Texts[ii].Position.y + LocalElementPos.y,
                 Elements[i].Texts[ii].FontSize,
-                Elements[i].Texts[ii].Color
+                Elements[i].Texts[ii].TextColor
             );
         }
 
         //buttons
         for(unsigned int ii=0; ii < Elements[i].Buttons.size(); ++ii) {
-            if(Elements[i].Buttons[ii].OutLine) DrawRectangleLinesEx(Elements[i].Buttons[ii].Button, 5, BLACK);
+            Rectangle LocalButtonPos = {
+                LocalElementPos.x + Elements[i].Buttons[ii].Button.x,
+                LocalElementPos.y + Elements[i].Buttons[ii].Button.y,
+                Elements[i].Buttons[ii].Button.width,
+                Elements[i].Buttons[ii].Button.height
+            };
+
+            if(Elements[i].Buttons[ii].OutLine) DrawRectangleLinesEx(LocalButtonPos, 2, BLACK);
             
             if(Elements[i].Buttons[ii].Pressed) {
                 DrawRectangleRec(
-                    Elements[i].Buttons[ii].Button,
+                    LocalButtonPos,
                     Elements[i].Buttons[ii].PressedColor
                 );
             } else {
                 DrawRectangleRec(
-                    Elements[i].Buttons[ii].Button,
+                    LocalButtonPos,
                     Elements[i].Buttons[ii].NotPressedColor
                 );
             }
             
             DrawText(
                 Elements[i].Buttons[ii].Text.Text.c_str(),
-                Elements[i].Buttons[ii].Text.Position.x,
-                Elements[i].Buttons[ii].Text.Position.y,
+                Elements[i].Buttons[ii].Text.Position.x + LocalButtonPos.x,
+                Elements[i].Buttons[ii].Text.Position.y + LocalButtonPos.y,
                 Elements[i].Buttons[ii].Text.FontSize,
-                Elements[i].Buttons[ii].Text.Color
+                Elements[i].Buttons[ii].Text.TextColor
             );
         }
 
         //Inputs
         for(unsigned int ii=0; ii < Elements[i].Inputs.size(); ++ii) {
-            if(Elements[i].Inputs[ii].OutLine) DrawRectangleLinesEx(Elements[i].Inputs[ii].InputRect, 5, BLACK);
+            Rectangle LocalInputPos = {
+                LocalElementPos.x + Elements[i].Inputs[ii].InputRect.x,
+                LocalElementPos.y + Elements[i].Inputs[ii].InputRect.y,
+                Elements[i].Inputs[ii].InputRect.width,
+                Elements[i].Inputs[ii].InputRect.height
+            };
+            
+            if(Elements[i].Inputs[ii].Outline) DrawRectangleLinesEx(LocalInputPos, 2, BLACK);
             
             if(Elements[i].Inputs[ii].Focus) {
                 DrawRectangleRec(
-                    Elements[i].Inputs[ii].InputRect,
+                    LocalInputPos,
                     Elements[i].Inputs[ii].FocusedBackground
                 );           
             } else {
                 DrawRectangleRec(
-                    Elements[i].Inputs[ii].InputRect,
+                    LocalInputPos,
                     Elements[i].Inputs[ii].UnFocusedBackground
                 );           
             }
             DrawText(
                 Elements[i].Inputs[ii].Text.Text.c_str(),
-                Elements[i].Inputs[ii].Text.Position.x,
-                Elements[i].Inputs[ii].Text.Position.y,
+                Elements[i].Inputs[ii].Text.Position.x + LocalInputPos.x,
+                Elements[i].Inputs[ii].Text.Position.y + LocalInputPos.y,
                 Elements[i].Inputs[ii].Text.FontSize,
-                Elements[i].Inputs[ii].Text.Color
+                Elements[i].Inputs[ii].Text.TextColor
             );
         }
+
+        //TopBar
+        DrawRectangle(_Window.x,_Window.y,_Window.width,10,TopBar);
     }
+}
+
+void Window::SetCamera(Camera2D *Cam) {
+    _Camera = Cam;
 }

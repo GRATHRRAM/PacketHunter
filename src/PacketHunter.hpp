@@ -1,6 +1,7 @@
 #pragma once
 #include "Devices/Devices.hpp"
 #include "Gui/PacketHunterGui.hpp"
+#include "Gui/Windows.hpp"
 #include <raylib.h>
 
 class PacketHunter {
@@ -11,6 +12,7 @@ class PacketHunter {
 
         Devices *devs;
         PacketHunterGui *gui;
+        WindowManager *winman;
 
         void MoveCamera();
 
@@ -19,6 +21,7 @@ class PacketHunter {
         void UpdateCamera();
         void Place(unsigned char Type);
         void Remove();
+        Vector2 CalculateCursorPosition();
     public:
         PacketHunter();
         ~PacketHunter();
