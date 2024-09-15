@@ -18,3 +18,4 @@ make </br>
 # CMake Options
 -D(Option)=(Value)</br>
 static if =true will compile program and link libs staticly</br>
+debug  if =true will compile program with debug symbols else will compile with -O2 flag</br>
