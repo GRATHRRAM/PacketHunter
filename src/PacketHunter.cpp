@@ -36,11 +36,11 @@ PacketHunter::PacketHunter() {
 
     winman = new WindowManager(gui->GetGuiYUpBorder(true), &_Camera);
     
-    Rectangle rect = {0,0, 320, 240};
+    Rectangle rect = {200,200, 320, 240};
     Window win("Cool Window", &rect);
 
     WindowLayout::WindowElement el;
-    el.Element = rect;
+    el.Element = {0,0,320,240};
     el.Outline = true;
     el.Background = (Color) { 170, 170, 170, 255 };
     el.Texts.push_back(WindowLayout::ExempleText);
@@ -121,7 +121,8 @@ void PacketHunter::Event() {
     if(!winman->CheckWindowsColision()) { 
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) Place(gui->GetType());
         if(IsKeyPressed(KEY_R)) Remove();
-    } else winman->UpdateWindows();
+    }
+    winman->UpdateWindows();
 }
 
 void PacketHunter::UpdateCamera() {    

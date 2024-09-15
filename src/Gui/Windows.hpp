@@ -55,6 +55,7 @@ namespace WindowLayout {
 class Window {
     private:
         Camera2D *_Camera;
+        bool Drag;
     public:
     Rectangle _Window;
     std::string Title;

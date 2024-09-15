@@ -40,16 +40,18 @@ Window::Window(std::string _Title, Rectangle *Window) {
 
 void Window::UpdateWindow() {
     Vector2 m = GetMousePosition();
-    m.x -= _Camera->offset.x;
-    m.y -= _Camera->offset.y;
 
+    if(!IsMouseButtonDown(MOUSE_BUTTON_LEFT)) Drag = false;
+    
     if (CheckCollisionRecs((Rectangle){m.x, m.y,1,1},_Window)) {
         //Window
         if(CheckCollisionRecs((Rectangle){m.x,m.y,1,1}, (Rectangle){_Window.x, _Window.y, _Window.width, 10})) {
             //TopBar
-            if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {_Window.x = m.x; _Window.y = m.y;}
-        }
-    } 
+            if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)) Drag = true;
+        } 
+    }
+
+    if(Drag) {_Window.x = m.x; _Window.y = m.y;}
 }
 
 void Window::Draw() {
