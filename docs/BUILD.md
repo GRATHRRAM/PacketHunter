@@ -14,3 +14,7 @@ cd Build</br>
 cmake ..</br>
 make </br>
 ./ph</br>
+
+# CMake Options
+-D(Option)=(Value)</br>
+static if =true will compile program and link libs staticly</br>
