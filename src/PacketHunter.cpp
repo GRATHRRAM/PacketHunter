@@ -34,7 +34,7 @@ PacketHunter::PacketHunter() {
     InitWindow(1024, 576, "PacketHunter");
     SetTargetFPS(60);
 
-    winman = new WindowManager(gui->GetGuiYUpBorder(true), &_Camera, this);
+    winman = new WindowManager(gui->GetGuiYUpBorder(true), &_Camera);
     
     Rectangle rect = {0,0, 320, 240};
     Window win("Cool Window", &rect);

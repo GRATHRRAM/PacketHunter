@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-class PacketHunter;
-
 namespace WindowLayout {
     /*Struct Layout*/
     //Rect/Vector2
@@ -75,10 +73,10 @@ class Window {
 class WindowManager {
     private:
         Camera2D *_Camera;
-        PacketHunter *ph;
+        Vector2 (*ccp)(void);
     public:
     float WindowsYBorderUP;
-    WindowManager(float WindowsYBordedUP, Camera2D *Camera, PacketHunter *ph);
+    WindowManager(float WindowsYBordedUP, Camera2D *Camera);
 
     std::vector<Window> Windows;
     bool CheckWindowsColision();

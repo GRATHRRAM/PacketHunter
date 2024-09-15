@@ -1,13 +1,11 @@
 #include "Windows.hpp"
 #include <raylib.h>
 
-WindowManager::WindowManager(float b, Camera2D *Cam,PacketHunter *_ph) {WindowsYBorderUP = b; _Camera = Cam;ph=_ph;}
+WindowManager::WindowManager(float b, Camera2D *Cam) {WindowsYBorderUP = b; _Camera = Cam;}
 
 bool WindowManager::CheckWindowsColision() {
     Vector2 m = GetMousePosition();
-    m.x -= _Camera->offset.x;
-    m.y -= _Camera->offset.y;
-    
+   
     for(unsigned int i=0; i < Windows.size(); ++i) {
         if(CheckCollisionRecs((Rectangle){m.x,m.y,1,1}, Windows[i]._Window)) {
             return true;

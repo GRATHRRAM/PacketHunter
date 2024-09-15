@@ -21,9 +21,9 @@ class PacketHunter {
         void UpdateCamera();
         void Place(unsigned char Type);
         void Remove();
-        Vector2 CalculateCursorPosition();
     public:
         PacketHunter();
         ~PacketHunter();
         void Run();
+        Vector2 CalculateCursorPosition();
 };
