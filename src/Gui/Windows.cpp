@@ -47,11 +47,26 @@ void Window::UpdateWindow() {
         //Window
         if(CheckCollisionRecs((Rectangle){m.x,m.y,1,1}, (Rectangle){_Window.x, _Window.y, _Window.width, 10})) {
             //TopBar
-            if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)) Drag = true;
+            if(IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !Drag) {
+                Drag = true;
+                Dist.x = m.x - _Window.x;
+                Dist.y = m.y - _Window.y;
+            }
+            /*
+            for(unsigned int i=0; i < Elements.size(); ++i) {
+                //buttons
+                for(unsigned int ii=0; i < Elements[i].Buttons.size(); ++ii) {
+                    Vector2 GlobalPosition = {
+                        _Window.x + Elements[i].Element.x + Elements[i].Buttons[ii].Button.x, 
+                        _Window.y + Elements[i].Element.y + Elements[i].Buttons[ii].Button.y 
+                    };
+                    
+                }
+            }*/
         } 
     }
 
-    if(Drag) {_Window.x = m.x; _Window.y = m.y;}
+    if(Drag) {_Window.x = m.x - Dist.x; _Window.y = m.y - Dist.y;}
 }
 
 void Window::Draw() {

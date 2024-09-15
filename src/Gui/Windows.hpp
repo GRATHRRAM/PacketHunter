@@ -62,6 +62,7 @@ class Window {
     Color TopBar;
     Color Background;
     bool OutLine;
+    Vector2 Dist;
 
     std::vector<WindowLayout::WindowElement> Elements;
     
