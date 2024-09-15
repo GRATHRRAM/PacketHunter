@@ -3,7 +3,8 @@
 #include <raylib.h>
 #include <string>
 #include <vector>
-#include "../PacketHunter.hpp"
+
+class PacketHunter;
 
 namespace WindowLayout {
     /*Struct Layout*/
