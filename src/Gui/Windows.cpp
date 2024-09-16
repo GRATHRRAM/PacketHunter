@@ -3,6 +3,8 @@
 #include <raylib.h>
 #include <string>
 
+#define WINDOW_TOPBAR_SIZE_PX 16
+
 
 WindowLayout::WindowText WindowLayout::ExempleText = {
     (Vector2){10,10},
@@ -35,6 +37,7 @@ Window::Window(std::string _Title, Rectangle *Window) {
     TopBar = GRAY;
     Background = LIGHTGRAY;
     OutLine = false;
+    DestroyWindow = false;
 }
 
 void Window::UpdateWindow() {
@@ -44,15 +47,22 @@ void Window::UpdateWindow() {
     
     if (CheckCollisionPointRec(m,_Window)) {
         //Window
-        if(CheckCollisionPointRec(m, (Rectangle){_Window.x, _Window.y, _Window.width, 10})) {
+        if(CheckCollisionPointRec(m, (Rectangle){_Window.x, _Window.y, _Window.width, WINDOW_TOPBAR_SIZE_PX})) {
             //TopBar
+            
             if(IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !Drag) {
+                if(CheckCollisionPointRec(m, (Rectangle){
+                            _Window.x + _Window.width - WINDOW_TOPBAR_SIZE_PX,
+                            _Window.y, _Window.width, WINDOW_TOPBAR_SIZE_PX})) DestroyWindow = true;
+            
                 Drag = true;
                 Dist.x = m.x - _Window.x;
                 Dist.y = m.y - _Window.y;
             }   
         } 
 
+        if(Drag) goto UpdateWindowEnd;
+        
         //Elements
         for(unsigned int i=0; i < Elements.size(); ++i) {
             //Buttons
@@ -73,8 +83,8 @@ void Window::UpdateWindow() {
                     Elements[i].Buttons[ii].Pressed = true;
                 } else Elements[i].Buttons[ii].Pressed = false;
             }
-            //Inputs
 
+            //Inputs
             for(unsigned int ii=0; ii < Elements[i].Inputs.size(); ++ii) {
                 Vector2 GlobalPosition = {
                     _Window.x + Elements[i].Element.x + Elements[i].Inputs[ii].InputRect.x, 
@@ -104,7 +114,8 @@ void Window::UpdateWindow() {
             }
         }
     }
-
+    
+    UpdateWindowEnd:;
     if(Drag) {_Window.x = m.x - Dist.x; _Window.y = m.y - Dist.y;}
 }
 
@@ -203,9 +214,26 @@ void Window::Draw() {
         }
 
         //TopBar
-        DrawRectangle(_Window.x,_Window.y,_Window.width,10,TopBar);
+        DrawRectangle(_Window.x,_Window.y,_Window.width,WINDOW_TOPBAR_SIZE_PX,TopBar);
         //Window Title
         DrawText(Title.c_str(),_Window.x + 5, _Window.y, 2, BLACK);
+        
+        //Red Squer on The window
+        DrawRectangle(
+            _Window.x + _Window.width - WINDOW_TOPBAR_SIZE_PX,
+            _Window.y,
+            WINDOW_TOPBAR_SIZE_PX,
+            WINDOW_TOPBAR_SIZE_PX,
+            RED
+        );
+        DrawRectangleLinesEx( (Rectangle) {
+            _Window.x + _Window.width - WINDOW_TOPBAR_SIZE_PX,
+            _Window.y,
+            WINDOW_TOPBAR_SIZE_PX,
+            WINDOW_TOPBAR_SIZE_PX},
+            2,
+            BLACK
+        );
     }
 }
 

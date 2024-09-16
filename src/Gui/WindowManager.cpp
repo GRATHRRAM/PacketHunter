@@ -25,5 +25,8 @@ void WindowManager::DrawWindows() {
 }
 
 void WindowManager::UpdateWindows() {
-    for(unsigned int i=0; i < Windows.size(); ++i) Windows[i].UpdateWindow();
+    for(unsigned int i=0; i < Windows.size(); ++i) {
+        if(Windows[i].DestroyWindow) Windows.erase(Windows.begin() + i); 
+        Windows[i].UpdateWindow();
+    }
 }

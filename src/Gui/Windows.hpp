@@ -62,6 +62,7 @@ class Window {
     Color Background;
     bool OutLine;
     Vector2 Dist;
+    bool DestroyWindow;
 
     std::vector<WindowLayout::WindowElement> Elements;
     
@@ -74,7 +75,6 @@ class Window {
 class WindowManager {
     private:
         Camera2D *_Camera;
-        Vector2 (*ccp)(void);
     public:
     float WindowsYBorderUP;
     WindowManager(float WindowsYBordedUP, Camera2D *Camera);

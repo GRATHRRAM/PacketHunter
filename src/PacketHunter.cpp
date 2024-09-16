@@ -44,7 +44,14 @@ PacketHunter::PacketHunter() {
     el.Outline = true;
     el.Background = (Color) { 170, 170, 170, 255 };
     el.Texts.push_back(WindowLayout::ExempleText);
-    el.Buttons.push_back(WindowLayout::ExempleButton);
+    el.Buttons.push_back((WindowLayout::WindowButton) {
+        (Rectangle){10,10,100,100},
+        WindowLayout::ExempleText,
+        false,
+        true,
+        WHITE,
+        RED
+    });
     el.Inputs.push_back(WindowLayout::ExempleInput);
 
     win.Elements.push_back(el);
