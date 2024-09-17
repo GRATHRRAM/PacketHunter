@@ -13,7 +13,7 @@ namespace WindowLayout {
     //Colors
 
     typedef struct WindowText {
-        Vector2 Position;
+        Rectangle TextRect;
         std::string Text;
         unsigned char FontSize;
         Color TextColor;
@@ -28,7 +28,7 @@ namespace WindowLayout {
         Color PressedColor;
     } WindowButton;
 
-    typedef struct WindowInput {
+    typedef struct WindowInput { 
         Rectangle InputRect;
         WindowText Text;
         bool Focus;
@@ -55,6 +55,7 @@ class Window {
     private:
         Camera2D *_Camera;
         bool Drag;
+        std::string WrapText(const std::string& text, unsigned int maxWidth, unsigned int fontSize);
     public:
     Rectangle _Window;
     std::string Title;

@@ -7,7 +7,7 @@
 
 
 WindowLayout::WindowText WindowLayout::ExempleText = {
-    (Vector2){10,10},
+    (Rectangle){20,20,80,80},
     "Text",
     2,
     BLACK
@@ -36,7 +36,7 @@ Window::Window(std::string _Title, Rectangle *Window) {
     Title=_Title;
     TopBar = GRAY;
     Background = LIGHTGRAY;
-    OutLine = false;
+    OutLine = true;
     DestroyWindow = false;
 }
 
@@ -103,18 +103,22 @@ void Window::UpdateWindow() {
                     Elements[i].Inputs[ii].Focus = true;
                 } 
                 
-                if(IsKeyPressed(KEY_ENTER)) Elements[i].Inputs[ii].Focus = false;
-                
+                if(IsKeyPressed(KEY_ENTER)) {
+                    Elements[i].Inputs[ii].Focus = false;
+                    Elements[i].Inputs[ii].Text.Text = WrapText(
+                    Elements[i].Inputs[ii].Text.Text,
+                    Elements[i].Inputs[ii].Text.TextRect.width - Elements[i].Inputs[ii].InputRect.x,
+                    Elements[i].Inputs[ii].Text.FontSize);
+                } 
 
                 if(Elements[i].Inputs[ii].Focus) {
                     char key = GetCharPressed();
                     const unsigned char MaxChars = 255;
-                    if(IsKeyPressed(KEY_BACKSPACE) && !Elements[i].Inputs[ii].Text.Text.empty()) Elements[i].Inputs[ii].Text.Text.pop_back();
+                    if (IsKeyPressed(KEY_DELETE)) Elements[i].Inputs[ii].Text.Text = "";
+                    else if(IsKeyPressed(KEY_BACKSPACE) && !Elements[i].Inputs[ii].Text.Text.empty()) Elements[i].Inputs[ii].Text.Text.pop_back();
                     else if(key > 0 && Elements[i].Inputs[ii].Text.Text.size() < MaxChars + 1) Elements[i].Inputs[ii].Text.Text += key;
                    
                     if(!IsCursorHidden()) DisableCursor();
-                   // if(IsKeyPressed(KEY_BACKSPACE)) Elements[i].Inputs[ii].Text.Text.pop_back();
-                   // else Elements[i].Inputs[ii].Text.Text += GetCharPressed();
                 } else if(IsCursorHidden()) {
                     EnableCursor();
                 }
@@ -129,7 +133,8 @@ void Window::Draw() {
     //Main Window
     DrawRectangleRec(_Window, Background);
     DrawText(Title.c_str(),_Window.x + 5, _Window.y + 2 , 2, BLACK);
-
+    
+    if(OutLine) DrawRectangleLinesEx(_Window, 10, BLACK);    
 
     //Elements
     for(unsigned int i=0; i < Elements.size(); ++i) {
@@ -148,8 +153,8 @@ void Window::Draw() {
         for(unsigned int ii=0; ii < Elements[i].Texts.size(); ++ii) {
             DrawText(
                 Elements[i].Texts[ii].Text.c_str(),
-                Elements[i].Texts[ii].Position.x + LocalElementPos.x,
-                Elements[i].Texts[ii].Position.y + LocalElementPos.y,
+                Elements[i].Texts[ii].TextRect.x + LocalElementPos.x,
+                Elements[i].Texts[ii].TextRect.y + LocalElementPos.y,
                 Elements[i].Texts[ii].FontSize,
                 Elements[i].Texts[ii].TextColor
             );
@@ -180,8 +185,8 @@ void Window::Draw() {
             
             DrawText(
                 Elements[i].Buttons[ii].Text.Text.c_str(),
-                Elements[i].Buttons[ii].Text.Position.x + LocalButtonPos.x,
-                Elements[i].Buttons[ii].Text.Position.y + LocalButtonPos.y,
+                Elements[i].Buttons[ii].Text.TextRect.x + LocalButtonPos.x,
+                Elements[i].Buttons[ii].Text.TextRect.y + LocalButtonPos.y,
                 Elements[i].Buttons[ii].Text.FontSize,
                 Elements[i].Buttons[ii].Text.TextColor
             );
@@ -212,8 +217,8 @@ void Window::Draw() {
             //TODO TEXTBOX
             DrawText(
                 Elements[i].Inputs[ii].Text.Text.c_str(),
-                Elements[i].Inputs[ii].Text.Position.x + LocalInputPos.x,
-                Elements[i].Inputs[ii].Text.Position.y + LocalInputPos.y,
+                Elements[i].Inputs[ii].Text.TextRect.x + LocalInputPos.x,
+                Elements[i].Inputs[ii].Text.TextRect.y + LocalInputPos.y,
                 Elements[i].Inputs[ii].Text.FontSize,
                 Elements[i].Inputs[ii].Text.TextColor
             );
@@ -245,4 +250,53 @@ void Window::Draw() {
 
 void Window::SetCamera(Camera2D *Cam) {
     _Camera = Cam;
+}
+
+std::string Window::WrapText(const std::string& text, const unsigned int maxWidth, const unsigned int fontSize) {
+    std::vector<std::string> wrappedLines;
+    std::string currentLine;
+    unsigned int currentLineWidth = 0;
+    
+    for (size_t i = 0; i < text.size(); ++i) {
+        char ch = text[i];
+        std::string newLine = currentLine + ch;
+        int lineWidth = MeasureText(newLine.c_str(), fontSize);
+        
+        if (ch == ' ' || ch == '\n') {
+            if (lineWidth > maxWidth) {
+                wrappedLines.push_back(currentLine);
+                currentLine.clear();
+                currentLineWidth = 0;
+            }
+            if (ch == '\n') {
+                if (!currentLine.empty()) {
+                    wrappedLines.push_back(currentLine);
+                    currentLine.clear();
+                }
+                continue;
+            }
+        }
+        
+        if (lineWidth > maxWidth) {
+            wrappedLines.push_back(currentLine);
+            currentLine.clear();
+            currentLineWidth = 0;
+            // Add the character to the new line
+            currentLine += ch;
+        } else {
+            currentLine += ch;
+        }
+    }
+    
+    if (!currentLine.empty()) {
+        wrappedLines.push_back(currentLine);
+    }
+    
+    std::string wrappedstring  = "";
+    
+    for(unsigned int i=0; i < wrappedLines.size(); ++i) {
+        wrappedstring += wrappedLines[i] + '\n';
+    }
+
+    return wrappedstring;
 }
