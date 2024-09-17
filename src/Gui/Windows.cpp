@@ -60,6 +60,7 @@ void Window::UpdateWindow() {
                 Dist.y = m.y - _Window.y;
             }   
         } 
+    }
 
         if(Drag) goto UpdateWindowEnd;
         
@@ -104,16 +105,21 @@ void Window::UpdateWindow() {
                 
                 if(IsKeyPressed(KEY_ENTER)) Elements[i].Inputs[ii].Focus = false;
                 
+
                 if(Elements[i].Inputs[ii].Focus) {
+                    char key = GetCharPressed();
+                    const unsigned char MaxChars = 255;
+                    if(IsKeyPressed(KEY_BACKSPACE) && !Elements[i].Inputs[ii].Text.Text.empty()) Elements[i].Inputs[ii].Text.Text.pop_back();
+                    else if(key > 0 && Elements[i].Inputs[ii].Text.Text.size() < MaxChars + 1) Elements[i].Inputs[ii].Text.Text += key;
+                   
                     if(!IsCursorHidden()) DisableCursor();
-                    if(IsKeyPressed(KEY_BACKSPACE)) Elements[i].Inputs[ii].Text.Text.pop_back();
-                    else Elements[i].Inputs[ii].Text.Text += GetCharPressed();
+                   // if(IsKeyPressed(KEY_BACKSPACE)) Elements[i].Inputs[ii].Text.Text.pop_back();
+                   // else Elements[i].Inputs[ii].Text.Text += GetCharPressed();
                 } else if(IsCursorHidden()) {
                     EnableCursor();
                 }
             }
         }
-    }
     
     UpdateWindowEnd:;
     if(Drag) {_Window.x = m.x - Dist.x; _Window.y = m.y - Dist.y;}
@@ -216,7 +222,7 @@ void Window::Draw() {
         //TopBar
         DrawRectangle(_Window.x,_Window.y,_Window.width,WINDOW_TOPBAR_SIZE_PX,TopBar);
         //Window Title
-        DrawText(Title.c_str(),_Window.x + 5, _Window.y, 2, BLACK);
+        DrawText(Title.c_str(),_Window.x + 5, _Window.y + 2, 3, BLACK);
         
         //Red Squer on The window
         DrawRectangle(
