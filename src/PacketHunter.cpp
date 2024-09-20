@@ -39,13 +39,13 @@ PacketHunter::PacketHunter() {
     Rectangle rect = {200,200, 360, 240};
     Window win("Cool Window", 16, &rect);
     
-    WindowLayout::WindowText txt = {0};
+    WindowLayout::WindowText txt = {};
     txt.Text = "Text";
     txt.TextRect = (Rectangle){20,20,100,100};
     txt.FontSize = 4;
     txt.TextColor = BLACK;
 
-    WindowLayout::WindowButton but = {0};
+    WindowLayout::WindowButton but = {};
     but.Text = txt; but.Text.Text = "Button";
     but.Text.TextColor = BLUE;
     but.Button = (Rectangle){20,40,100,100};
@@ -53,7 +53,7 @@ PacketHunter::PacketHunter() {
     but.PressedColor = RED;
     but.NotPressedColor = PURPLE;
 
-    WindowLayout::WindowInput inp = {0};
+    WindowLayout::WindowInput inp = {};
     inp.Text = txt; inp.Text.Text = "Input";
     inp.Text.TextColor = GREEN; 
     inp.InputRect = (Rectangle){140, 40, 100, 100};
@@ -63,7 +63,7 @@ PacketHunter::PacketHunter() {
     inp.FocusedBackground = WHITE;
     inp.UnFocusedBackground = GRAY;
 
-    WindowLayout::WindowElement el = {0};
+    WindowLayout::WindowElement el = {};
     el.Element = {0,0,360,240};
     el.Outline = true;
     el.Background = (Color) { 170, 170, 170, 255 };

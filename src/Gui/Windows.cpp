@@ -237,7 +237,7 @@ std::string Window::WrapText(const std::string& text, const unsigned int maxWidt
     for (size_t i = 0; i < text.size(); ++i) {
         char ch = text[i];
         std::string newLine = currentLine + ch;
-        int lineWidth = MeasureText(newLine.c_str(), fontSize);
+        unsigned int lineWidth = (unsigned int) MeasureText(newLine.c_str(), fontSize);
         
         if (ch == ' ' || ch == '\n') {
             if (lineWidth > maxWidth) {
@@ -269,6 +269,8 @@ std::string Window::WrapText(const std::string& text, const unsigned int maxWidt
         wrappedLines.push_back(currentLine);
     }
     
+    currentLineWidth++;//TO_MAKE_COMPILER_SHUT
+
     std::string wrappedstring  = "";
     
     for(unsigned int i=0; i < wrappedLines.size(); ++i) {
