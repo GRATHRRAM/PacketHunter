@@ -36,23 +36,41 @@ PacketHunter::PacketHunter() {
 
     winman = new WindowManager(gui->GetGuiYUpBorder(true), &_Camera);
     
-    Rectangle rect = {200,200, 320, 240};
-    Window win("Cool Window", &rect);
+    Rectangle rect = {200,200, 360, 240};
+    Window win("Cool Window", 16, &rect);
+    
+    WindowLayout::WindowText txt = {0};
+    txt.Text = "Text";
+    txt.TextRect = (Rectangle){20,20,100,100};
+    txt.FontSize = 4;
+    txt.TextColor = BLACK;
 
-    WindowLayout::WindowElement el;
-    el.Element = {0,0,320,240};
+    WindowLayout::WindowButton but = {0};
+    but.Text = txt; but.Text.Text = "Button";
+    but.Text.TextColor = BLUE;
+    but.Button = (Rectangle){20,40,100,100};
+    but.OutLine = true;
+    but.PressedColor = RED;
+    but.NotPressedColor = PURPLE;
+
+    WindowLayout::WindowInput inp = {0};
+    inp.Text = txt; inp.Text.Text = "Input";
+    inp.Text.TextColor = GREEN; 
+    inp.InputRect = (Rectangle){140, 40, 100, 100};
+    inp.Text.TextRect = (Rectangle){10, 10, inp.InputRect.width - 10, inp.InputRect.height - 10};
+
+    inp.Outline = true;
+    inp.FocusedBackground = WHITE;
+    inp.UnFocusedBackground = GRAY;
+
+    WindowLayout::WindowElement el = {0};
+    el.Element = {0,0,360,240};
     el.Outline = true;
     el.Background = (Color) { 170, 170, 170, 255 };
-    el.Texts.push_back(WindowLayout::ExempleText);
-    el.Buttons.push_back((WindowLayout::WindowButton) {
-        (Rectangle){10,10,100,100},
-        WindowLayout::ExempleText,
-        false,
-        true,
-        WHITE,
-        RED
-    });
-    el.Inputs.push_back(WindowLayout::ExempleInput);
+
+    el.Texts.push_back(txt);
+    el.Buttons.push_back(but);
+    el.Inputs.push_back(inp);
 
     win.Elements.push_back(el);
 

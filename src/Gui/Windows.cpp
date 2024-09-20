@@ -3,41 +3,14 @@
 #include <raylib.h>
 #include <string>
 
-#define WINDOW_TOPBAR_SIZE_PX 16
-
-
-WindowLayout::WindowText WindowLayout::ExempleText = {
-    (Rectangle){20,20,80,80},
-    "Text",
-    2,
-    BLACK
-};
-
-WindowLayout::WindowButton WindowLayout::ExempleButton = {
-    (Rectangle){20,20,100,100},
-    WindowLayout::ExempleText,
-    false,
-    true,
-    DARKGRAY,
-    LIGHTGRAY,
-};
-
-WindowLayout::WindowInput WindowLayout::ExempleInput = {
-    (Rectangle){20, 140, 100, 100},
-    WindowLayout::ExempleText,
-    false,
-    true,
-    DARKGRAY,
-    LIGHTGRAY,
-};
-
-Window::Window(std::string _Title, Rectangle *Window) {
+Window::Window(std::string _Title, unsigned short _TopBarSize, Rectangle *Window) {
     _Window=*Window;
     Title=_Title;
     TopBar = GRAY;
     Background = LIGHTGRAY;
     OutLine = true;
     DestroyWindow = false;
+    TopBarSize = _TopBarSize;
 }
 
 void Window::UpdateWindow() {
@@ -47,13 +20,13 @@ void Window::UpdateWindow() {
     
     if (CheckCollisionPointRec(m,_Window)) {
         //Window
-        if(CheckCollisionPointRec(m, (Rectangle){_Window.x, _Window.y, _Window.width, WINDOW_TOPBAR_SIZE_PX})) {
+        if(CheckCollisionPointRec(m, (Rectangle){_Window.x, _Window.y, _Window.width,(float) TopBarSize})) {
             //TopBar
             
             if(IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !Drag) {
                 if(CheckCollisionPointRec(m, (Rectangle){
-                            _Window.x + _Window.width - WINDOW_TOPBAR_SIZE_PX,
-                            _Window.y, _Window.width, WINDOW_TOPBAR_SIZE_PX})) DestroyWindow = true;
+                            _Window.x + _Window.width - TopBarSize,
+                            _Window.y, _Window.width,(float) TopBarSize})) DestroyWindow = true;
             
                 Drag = true;
                 Dist.x = m.x - _Window.x;
@@ -103,17 +76,22 @@ void Window::UpdateWindow() {
                     Elements[i].Inputs[ii].Focus = true;
                 } 
                 
-                if(IsKeyPressed(KEY_ENTER)) {
-                    Elements[i].Inputs[ii].Focus = false;
-                    Elements[i].Inputs[ii].Text.Text = WrapText(
-                    Elements[i].Inputs[ii].Text.Text,
-                    Elements[i].Inputs[ii].Text.TextRect.width - Elements[i].Inputs[ii].InputRect.x,
-                    Elements[i].Inputs[ii].Text.FontSize);
-                } 
+                if(IsKeyPressed(KEY_ENTER)) { 
+                    if (!IsKeyDown(KEY_LEFT_SHIFT)) {
+                        Elements[i].Inputs[ii].Focus = false;
+                        Elements[i].Inputs[ii].Text.Text = WrapText(
+                        Elements[i].Inputs[ii].Text.Text,
+                        Elements[i].Inputs[ii].Text.TextRect.width - Elements[i].Inputs[ii].Text.TextRect.x,
+                        Elements[i].Inputs[ii].Text.FontSize);
+                    } else {
+                        Elements[i].Inputs[ii].Text.Text.push_back('\n');
+                    }
+                }  
 
                 if(Elements[i].Inputs[ii].Focus) {
-                    char key = GetCharPressed();
-                    const unsigned char MaxChars = 255;
+                    char key = GetCharPressed(); 
+                    const unsigned short MaxChars = 2048;
+                    
                     if (IsKeyPressed(KEY_DELETE)) Elements[i].Inputs[ii].Text.Text = "";
                     else if(IsKeyPressed(KEY_BACKSPACE) && !Elements[i].Inputs[ii].Text.Text.empty()) Elements[i].Inputs[ii].Text.Text.pop_back();
                     else if(key > 0 && Elements[i].Inputs[ii].Text.Text.size() < MaxChars + 1) Elements[i].Inputs[ii].Text.Text += key;
@@ -214,7 +192,6 @@ void Window::Draw() {
                     Elements[i].Inputs[ii].UnFocusedBackground
                 );           
             }
-            //TODO TEXTBOX
             DrawText(
                 Elements[i].Inputs[ii].Text.Text.c_str(),
                 Elements[i].Inputs[ii].Text.TextRect.x + LocalInputPos.x,
@@ -225,23 +202,23 @@ void Window::Draw() {
         }
 
         //TopBar
-        DrawRectangle(_Window.x,_Window.y,_Window.width,WINDOW_TOPBAR_SIZE_PX,TopBar);
+        DrawRectangle(_Window.x,_Window.y,_Window.width,TopBarSize,TopBar);
         //Window Title
         DrawText(Title.c_str(),_Window.x + 5, _Window.y + 2, 3, BLACK);
         
         //Red Squer on The window
         DrawRectangle(
-            _Window.x + _Window.width - WINDOW_TOPBAR_SIZE_PX,
+            _Window.x + _Window.width - TopBarSize,
             _Window.y,
-            WINDOW_TOPBAR_SIZE_PX,
-            WINDOW_TOPBAR_SIZE_PX,
+            TopBarSize,
+            TopBarSize,
             RED
         );
         DrawRectangleLinesEx( (Rectangle) {
-            _Window.x + _Window.width - WINDOW_TOPBAR_SIZE_PX,
+            _Window.x + _Window.width - TopBarSize,
             _Window.y,
-            WINDOW_TOPBAR_SIZE_PX,
-            WINDOW_TOPBAR_SIZE_PX},
+            (float) TopBarSize,
+            (float) TopBarSize},
             2,
             BLACK
         );

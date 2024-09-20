@@ -39,16 +39,14 @@ namespace WindowLayout {
 
     typedef struct WindowElement {
         Rectangle Element;
+        bool Draw;
+        bool Update;
         bool Outline;
         Color Background;
         std::vector<WindowText>   Texts;
         std::vector<WindowButton> Buttons;
         std::vector<WindowInput>  Inputs;
     } WindowElement;
-    
-    extern WindowText ExempleText;
-    extern WindowButton ExempleButton;
-    extern WindowInput ExempleInput;
 }
 
 class Window {
@@ -64,10 +62,11 @@ class Window {
     bool OutLine;
     Vector2 Dist;
     bool DestroyWindow;
+    unsigned short TopBarSize;
 
     std::vector<WindowLayout::WindowElement> Elements;
     
-    Window(std::string Title, Rectangle *Window);
+    Window(std::string Title, unsigned short TopBarSize, Rectangle *Window);
     void UpdateWindow();
     void Draw();
     void SetCamera(Camera2D *Camera);
