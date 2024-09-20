@@ -1,4 +1,4 @@
-# Contributing Roules </br>
+# Contributing Rules </br>
 
 ## Make Code Easly Readable
 It Doesn't Need To Be Extremely Explicit, Just Try To Make It Readable. </br>
