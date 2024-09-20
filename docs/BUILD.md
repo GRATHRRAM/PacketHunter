@@ -19,3 +19,4 @@ make </br>
 -D(Option)=(Value)</br>
 static if =true will compile program and link libs staticly</br>
 debug  if =true will compile program with debug symbols else will compile with -O2 flag</br>
+all_libs if =true links all libs that the program uses else links only math and raylib (usefull only if you link staticly) 
