@@ -9,6 +9,7 @@ namespace WindowLayout {
     //Rect/Vector2
     //WindowText
     //bool Values
+    //OutlineSize 
     //Last bool is outline!
     //Colors
 
@@ -23,7 +24,8 @@ namespace WindowLayout {
         Rectangle Button;
         WindowText Text;
         bool Pressed;
-        bool OutLine;
+        bool Outline;
+        unsigned char OutlineSize;
         Color NotPressedColor;
         Color PressedColor;
     } WindowButton;
@@ -33,15 +35,16 @@ namespace WindowLayout {
         WindowText Text;
         bool Focus;
         bool Outline;
+        unsigned char OutlineSize;
         Color UnFocusedBackground;
         Color FocusedBackground;
     } WindowInput;
 
     typedef struct WindowElement {
         Rectangle Element;
-        bool Draw;
-        bool Update;
+        bool Show;
         bool Outline;
+        unsigned char OutlineSize;
         Color Background;
         std::vector<WindowText>   Texts;
         std::vector<WindowButton> Buttons;
@@ -60,6 +63,7 @@ class Window {
     Color TopBar;
     Color Background;
     bool OutLine;
+    unsigned char OutlineSize;
     Vector2 Dist;
     bool DestroyWindow;
     unsigned short TopBarSize;

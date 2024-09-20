@@ -49,7 +49,8 @@ PacketHunter::PacketHunter() {
     but.Text = txt; but.Text.Text = "Button";
     but.Text.TextColor = BLUE;
     but.Button = (Rectangle){20,40,100,100};
-    but.OutLine = true;
+    but.Outline = true;
+    but.OutlineSize = 1;
     but.PressedColor = RED;
     but.NotPressedColor = PURPLE;
 
@@ -58,14 +59,16 @@ PacketHunter::PacketHunter() {
     inp.Text.TextColor = GREEN; 
     inp.InputRect = (Rectangle){140, 40, 100, 100};
     inp.Text.TextRect = (Rectangle){10, 10, inp.InputRect.width - 10, inp.InputRect.height - 10};
-
     inp.Outline = true;
+    inp.OutlineSize = 1;
     inp.FocusedBackground = WHITE;
     inp.UnFocusedBackground = GRAY;
 
     WindowLayout::WindowElement el = {};
     el.Element = {0,0,360,240};
-    el.Outline = true;
+    el.Outline = false;
+    el.OutlineSize = 1;
+    el.Show = true;
     el.Background = (Color) { 170, 170, 170, 255 };
 
     el.Texts.push_back(txt);

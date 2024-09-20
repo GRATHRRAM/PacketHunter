@@ -11,6 +11,7 @@ Window::Window(std::string _Title, unsigned short _TopBarSize, Rectangle *Window
     OutLine = true;
     DestroyWindow = false;
     TopBarSize = _TopBarSize;
+    OutlineSize = 1;
 }
 
 void Window::UpdateWindow() {
@@ -39,6 +40,7 @@ void Window::UpdateWindow() {
         
         //Elements
         for(unsigned int i=0; i < Elements.size(); ++i) {
+            if(!Elements[i].Show) continue;
             //Buttons
             for(unsigned int ii=0; ii < Elements[i].Buttons.size(); ++ii) {
                 Vector2 GlobalPosition = {
@@ -112,11 +114,13 @@ void Window::Draw() {
     DrawRectangleRec(_Window, Background);
     DrawText(Title.c_str(),_Window.x + 5, _Window.y + 2 , 2, BLACK);
     
-    if(OutLine) DrawRectangleLinesEx(_Window, 10, BLACK);    
-
+    if(OutLine) DrawRectangleLinesEx((Rectangle){_Window.x-OutlineSize,_Window.y-OutlineSize,_Window.width+OutlineSize*2,_Window.height+OutlineSize*2}, OutlineSize, BLACK);    
     //Elements
     for(unsigned int i=0; i < Elements.size(); ++i) {
         //Element
+        
+        if(!Elements[i].Show) continue;
+
         Rectangle LocalElementPos = {
             _Window.x + Elements[i].Element.x,
             _Window.y + Elements[i].Element.y,
@@ -124,7 +128,13 @@ void Window::Draw() {
             Elements[i].Element.height
         };
 
-        if(Elements[i].Outline) DrawRectangleLinesEx(LocalElementPos, 2, BLACK);
+        if(Elements[i].Outline) DrawRectangleLinesEx((Rectangle){
+                LocalElementPos.x-Elements[i].OutlineSize,
+                LocalElementPos.y-Elements[i].OutlineSize,
+                LocalElementPos.width+Elements[i].OutlineSize*2,
+                LocalElementPos.height+Elements[i].OutlineSize*2,
+        }, Elements[i].OutlineSize, BLACK);
+        
         DrawRectangleRec(LocalElementPos, Elements[i].Background);
         
         //Text
@@ -147,7 +157,12 @@ void Window::Draw() {
                 Elements[i].Buttons[ii].Button.height
             };
 
-            if(Elements[i].Buttons[ii].OutLine) DrawRectangleLinesEx(LocalButtonPos, 2, BLACK);
+            if(Elements[i].Buttons[ii].Outline) DrawRectangleLinesEx((Rectangle){
+                    LocalButtonPos.x-Elements[i].Buttons[ii].OutlineSize,
+                    LocalButtonPos.y-Elements[i].Buttons[ii].OutlineSize,
+                    LocalButtonPos.width+Elements[i].Buttons[ii].OutlineSize*2,
+                    LocalButtonPos.height+Elements[i].Buttons[ii].OutlineSize*2,
+            }, Elements[i].Buttons[ii].OutlineSize, BLACK);
             
             if(Elements[i].Buttons[ii].Pressed) {
                 DrawRectangleRec(
@@ -179,7 +194,12 @@ void Window::Draw() {
                 Elements[i].Inputs[ii].InputRect.height
             };
             
-            if(Elements[i].Inputs[ii].Outline) DrawRectangleLinesEx(LocalInputPos, 2, BLACK);
+            if(Elements[i].Inputs[ii].Outline) DrawRectangleLinesEx((Rectangle){
+                    LocalInputPos.x-Elements[i].Inputs[ii].OutlineSize,
+                    LocalInputPos.y-Elements[i].Inputs[ii].OutlineSize,
+                    LocalInputPos.width+Elements[i].Inputs[ii].OutlineSize*2,
+                    LocalInputPos.height+Elements[i].Inputs[ii].OutlineSize*2,
+            }, Elements[i].Inputs[ii].OutlineSize, BLACK);
             
             if(Elements[i].Inputs[ii].Focus) {
                 DrawRectangleRec(
@@ -214,14 +234,8 @@ void Window::Draw() {
             TopBarSize,
             RED
         );
-        DrawRectangleLinesEx( (Rectangle) {
-            _Window.x + _Window.width - TopBarSize,
-            _Window.y,
-            (float) TopBarSize,
-            (float) TopBarSize},
-            2,
-            BLACK
-        );
+
+        if(OutLine) DrawLineEx((Vector2){_Window.x, _Window.y + TopBarSize},(Vector2){_Window.x + _Window.width, _Window.y + TopBarSize}, OutlineSize, BLACK);
     }
 }
 
