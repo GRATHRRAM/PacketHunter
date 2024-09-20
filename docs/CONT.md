@@ -9,6 +9,6 @@ It Doesn't Need To Be Extremely Explicit, Just Try To Make It Readable. </br>
 
 ## Dont Use Fancy c++ Shit
 It makes code Unreadable, Hard To Work With, And Its Just a Pain. So Tempaltes Big no no, </br>
-Classes are ok, Keep is c like, So Struct Raw Pointers And Other Fun Staff</br>
+Classes are ok, Keep it c like, So Structs Raw Pointers And Other Fun Staff</br>
 ![изображение](https://github.com/user-attachments/assets/718d2a29-47ed-4b88-b7c5-c09bbdcee2fb)
 
